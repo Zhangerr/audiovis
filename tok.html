@@ -175,8 +175,8 @@ background-color: black;
             // The nodes are:  sourceNode -> analyserNode -> javascriptNode -> destination
 
             // create an audio buffer source node
-            //sourceNode = audioContext.createMediaStreamSource(audioStream);
-            sourceNode = audioContext.createMediaElementSource(document.getElementById("music"))
+            sourceNode = audioContext.createMediaStreamSource(audioStream);
+            //sourceNode = audioContext.createMediaElementSource(document.getElementById("music"))
             // Set up the javascript node - this uses only one channel - i.e. a mono microphone
             javascriptNode = audioContext.createJavaScriptNode(sampleSize, 1, 1);
 
