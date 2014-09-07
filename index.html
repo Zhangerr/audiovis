@@ -1,79 +1,328 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Audiovis : html5 audio visualizer made quickly for in class project, based off sample code online" />
+<html lang="en">
+<head>
+  <meta charset="utf-8">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+  <title>tok mic test</title>
+  <style type="text/css">
+  body,html {
+    padding:0;
+    margin:0;
+overflow:none;
+background-color: black;
+  }
+  body {
+  	
+  	font-family:"Century Gothic";
+  	color:#aaa;
+    height:100%;
 
-    <title>Audiovis</title>
-  </head>
+  }
+  html {
+    height:100%;
+  }
+  #square {
+    background-color:blue;
+    width:100px;
+    height:100px;
+    z-index:1000;
+    position:absolute;
+    -webkit-transition:all .1s;
+  }
+  canvas {
+    background-color:black;
+  }
+  </style>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
 
-  <body>
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/Zhangerr/audiovis">View on GitHub</a>
+<body>
+	<canvas id="canvas" width="1920" height="1075" ></canvas>
+  <!--<div id="square"></div>-->
+  <audio id="music" src="houkagi.mp3" autoplay>
+  Your browser does not support the <code>audio</code> element.
+  </audio>
+  <script src="js/scripts.js"></script>
+  <script type="text/javascript">
 
-          <h1 id="project_title">Audiovis</h1>
-          <h2 id="project_tagline">html5 audio visualizer made quickly for in class project, based off sample code online</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/Zhangerr/audiovis/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/Zhangerr/audiovis/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Audiovis maintained by <a href="https://github.com/Zhangerr">Zhangerr</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
+  //try making this stuff circular (arc) instead of just straight lines, will be cool
+  //try optimizing drawing section with less stuff in the loop
+  	window.requestAnimFrame = (function(){
+  	  return  window.requestAnimationFrame       ||
+  	          window.webkitRequestAnimationFrame ||
+  	          window.mozRequestAnimationFrame    ||
+  	          window.oRequestAnimationFrame      ||
+  	          window.msRequestAnimationFrame     ||
+  	          function(callback, element){
+  	            window.setTimeout(callback, 1000 / 60);
+  	          };
+  	})();
     
+  	   // Global Variables for Audio
+    var audioContext;
 
-  </body>
+    var sourceNode;
+    var analyserNode;
+    var javascriptNode;
+    var playbackSourceNode;
+    var audioStream;
+    var array = [];
+    var recording = null;  // this is the cumulative buffer for your recording
+
+    var audioBufferNode = null;
+    var audioBuffer = null;
+
+    // Global Variables for Drawing
+    var x = 0;
+    var mode = 0;
+    var ctx;
+
+    window.craicAudioContext = (function(){
+      return  window.webkitAudioContext || window.AudioContext ;
+    })();
+    navigator.getMedia = ( navigator.mozGetUserMedia ||
+                           navigator.getUserMedia ||
+                           navigator.webkitGetUserMedia ||
+                           navigator.msGetUserMedia);
+     $(document).ready(function() {
+
+
+            // get the context from the canvas to draw on
+            ctx = $("#canvas").get()[0].getContext("2d");
+            clearCanvas();
+
+            // Check that the browser can handle web audio
+            try {
+    //            audioContext = new webkitAudioContext();
+                audioContext = new craicAudioContext();
+
+            }
+            catch(e) {
+                alert('Web Audio API is not supported in this browser');
+            }
+
+            // get the input audio stream and set up the nodes
+            try {
+                // calls the function setupAudioNodes
+    //            navigator.webkitGetUserMedia({audio:true}, setupAudioNodes, onError);
+                navigator.getMedia({audio:true}, setupAudioNodes, onError);
+
+            } catch (e) {
+                alert('webkitGetUserMedia threw exception :' + e);
+            }
+
+                // execute every time a new sample has been acquired
+
+            // Start recording by setting onaudioprocess to the function that manages the recording buffer
+            $("body").on('click', "#start_button",function(e) {
+                e.preventDefault();
+
+                // execute every time a new sample has been acquired
+                javascriptNode.onaudioprocess = function (e) {
+                    
+
+                    // Analyze the frequencies in this sample and add to the spectorgram
+                    analyserNode.getByteFrequencyData(array);
+                    requestAnimFrame(drawSpectrogram);
+                }
+            });
+
+            // Stop recording by setting onaudioprocess to null
+            $("body").on('click', "#stop_button",function(e) {
+                e.preventDefault();
+                javascriptNode.onaudioprocess = null;
+             });
+
+            // Play the recording
+            $("body").on('click', "#playback_button",function(e) {
+                e.preventDefault();
+                playRecording();
+             });
+
+            // Reset the recording buffer and the graphics, but keep the nodes connected
+            $("body").on('click', "#reset_button",function(e) {
+                e.preventDefault();
+                recording = null;
+                clearCanvas();
+             });
+
+            // Disable audio completely
+            $("body").on('click', "#disable_audio",function(e) {
+                e.preventDefault();
+                javascriptNode.onaudioprocess = null;
+                if(audioStream)  audioStream.stop();
+                if(sourceNode)  sourceNode.disconnect();
+             });
+        });
+
+        function onError(e) {
+            console.log(e);
+        }
+
+        function setupAudioNodes(stream) {
+            var sampleSize = 1024;  // number of samples to collect before analyzing FFT
+                                    // decreasing this gives a faster sonogram, increasing it slows it down
+            audioStream = stream;
+
+            // The nodes are:  sourceNode -> analyserNode -> javascriptNode -> destination
+
+            // create an audio buffer source node
+            //sourceNode = audioContext.createMediaStreamSource(audioStream);
+            sourceNode = audioContext.createMediaElementSource(document.getElementById("music"))
+            // Set up the javascript node - this uses only one channel - i.e. a mono microphone
+            javascriptNode = audioContext.createJavaScriptNode(sampleSize, 1, 1);
+
+            // setup the analyser node
+            analyserNode = audioContext.createAnalyser();
+            analyserNode.smoothingTimeConstant = 0.0;
+            analyserNode.fftSize = 256; // must be power of two
+
+            // connect the nodes together
+            sourceNode.connect(analyserNode);
+            analyserNode.connect(javascriptNode);
+            javascriptNode.connect(audioContext.destination);
+
+            // optional - connect input to audio output (speaker)
+            // This will echo your input back to your speakers - Beware of Feedback !!
+             sourceNode.connect(audioContext.destination);
+
+            // allocate the array for Frequency Data
+            var i = 0;
+            array = new Uint8Array(analyserNode.frequencyBinCount);
+            document.onkeypress = function(e) {
+              if(e.keyCode === 113) { //q
+                  mode = 0;
+              } else if (e.keyCode === 119) { //w
+                  mode = 1;
+              } else if (e.keyCode === 101) { // e
+                  mode = 2;
+              }
+              clearCanvas();
+            }
+            javascriptNode.onaudioprocess = function (e) {
+                    
+
+                    // Analyze the frequencies in this sample and add to the spectorgram
+                    analyserNode.getByteFrequencyData(array);
+                   // if(i%5==0) {
+                  //    console.log(i);
+                    requestAnimFrame(drawSpectrogram);
+                      
+                //    }
+                    i++;
+                }
+        }
+
+        function scaleX(input) {
+          var percent = input/255.0;
+          return percent * document.body.clientWidth;
+
+        }
+        function scaleY(input) {
+          var percent = input/255.0;
+          return percent * document.body.clientHeight;
+        }
+        function scaleColor(input) {
+
+        }
+        // Draw the Spectrogram from the frequency array
+        // adapted from http://www.smartjava.org/content/exploring-html5-web-audio-visualizing-sound
+        function drawSpectrogram() {
+
+        ctx.globalAlpha = .1;
+        ctx.strokeStyle="black";
+        ctx.fillRect(0,0,1920,1080)
+        /*  clearCanvas();
+        	ctx.beginPath();
+          ctx.lineWidth = 15;
+          ctx.strokeStyle = "rgb(" + array[51] + "," + array[52] + "," + array[53] + ")"
+        	ctx.arc(array[50],array[55],50,0,2*Math.PI);*/
+          //console.log(array[50])
+    /*      $("#square").css("top",scaleY(array[50]));
+          $("#square").css("left",scaleX(array[55]));
+          $("#square").css("backgroundColor","rgb(" + array[51]/2 + "," + array[52]/1.5 + "," + array[53]/5 + ")")
+          $("#square").css("width",scaleX(array[60]))
+          $("#square").css("height",scaleY(array[80]))*/
+          ctx.globalAlpha = 1;
+          ctx.lineWidth = 16;
+          var grad= ctx.createLinearGradient(0, 0, 1920, 0);
+          grad.addColorStop(0, "blue");
+          grad.addColorStop(1, "gold");
+          //grad.addColorStop(1,"gold");
+          var radiustTotal=0;
+          ctx.strokeStyle = grad;
+          for(var i = 0; i < array.length; i++) {
+
+              var value = array[i];
+              ctx.beginPath();
+
+              // horizontal style
+              if(mode === 1) {
+                ctx.moveTo(0,i*18);
+                ctx.lineTo(value/255.0*1920,i*18);
+                ctx.closePath();
+                ctx.stroke();   
+              } else if (mode===0) {
+                //vertical style
+                ctx.moveTo(i*18,1080);
+                ctx.lineTo(i*18,1080-value/255.0*1080);
+                ctx.closePath();
+                ctx.stroke();
+              } else if (mode ===2) {
+                //circle style
+                ctx.lineWidth=Math.pow(2,-i/10)*23;
+                ctx.lineCap = 'round';
+                if(i % 2 == 0) {
+                  ctx.strokeStyle = "#a9a9a9"
+                  ctx.arc(1920/2,1080/2,/*i**/(Math.pow(2,-i/10)*23) + radiustTotal + 1,Math.PI,Math.PI + value/255.0*2*Math.PI)
+                } else {
+                  ctx.strokeStyle = "red"
+                  ctx.arc(1920/2,1080/2,/*i**/(Math.pow(2,-i/10)*23) + radiustTotal + 1,0,value/255.0*2*Math.PI)
+                }
+                radiustTotal +=Math.pow(2,-i/10)*23 + 2;
+
+                ctx.stroke();
+              }
+          }
+
+        	//ctx.stroke();
+            /*for (var i = 0; i < array.length; i += 1) {
+                // Get the color for each pixel from a color map
+                var value = array[i];
+                ctx.beginPath();
+                ctx.strokeStyle = hot.getColor(value).hex();
+
+                // draw a 1 pixel wide rectangle on the canvas
+                var y = canvasHeight - i;
+                ctx.moveTo(x, y);
+                ctx.lineTo(x+1, y);
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            // loop around the canvas when we reach the end
+            x = x + 1;
+            if(x >= canvasWidth) {
+                x = 0;
+                clearCanvas();
+            }*/
+            
+        }
+
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, 1920, 1080);
+            x = 0;
+        }
+
+  </script>
+</body>
 </html>
