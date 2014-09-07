@@ -112,8 +112,8 @@ background-color: black;
             // get the input audio stream and set up the nodes
             try {
                 // calls the function setupAudioNodes
-    //            navigator.webkitGetUserMedia({audio:true}, setupAudioNodes, onError);
-                navigator.getMedia({audio:true}, setupAudioNodes, onError);
+                navigator.webkitGetUserMedia({audio:true}, setupAudioNodes, onError);
+    //            navigator.getMedia({audio:true}, setupAudioNodes, onError);
 
             } catch (e) {
                 alert('webkitGetUserMedia threw exception :' + e);
